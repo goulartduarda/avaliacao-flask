@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Mensagens{% endblock %}
+{% block content %}
+<h2>Mensagens</h2>
+<form method="post" action="/messages/send">
+    <input name="titulo" placeholder="Título" class="form-control mb-2" required>
+    <textarea name="texto" placeholder="Texto" class="form-control mb-2" required></textarea>
+    <select name="contato" class="form-control mb-2" required>
+        {% for c in contatos %}
+        <option value="{{ c.id }}">{{ c.nome }}</option>
+        {% endfor %}
+    </select>
+    <button class="btn btn-success" type="submit">Enviar Mensagem</button>
+</form>
+<hr>
+<ul class="list-group mt-3">
+    {% for m in mensagens %}
+    <li class="list-group-item">
+        <strong>{{ m.titulo }}</strong> para {{ m.contato.nome }}<br>
+        {{ m.texto }}<br>
+        <small>{{ m.data_envio }}</small>
+    </li>
+    {% endfor %}
+</ul>
+<a href="/contacts" class="btn btn-link mt-3">Voltar aos Contatos</a>
+<a href="/logout" class="btn btn-secondary">Logout</a>
+{% endblock %}
