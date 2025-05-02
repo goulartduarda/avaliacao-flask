@@ -1,27 +1,57 @@
 {% extends 'base.html' %}
 {% block title %}Mensagens{% endblock %}
 {% block content %}
-<h2>Mensagens</h2>
-<form method="post" action="/messages/send">
-    <input name="titulo" placeholder="Título" class="form-control mb-2" required>
-    <textarea name="texto" placeholder="Texto" class="form-control mb-2" required></textarea>
-    <select name="contato" class="form-control mb-2" required>
-        {% for c in contatos %}
-        <option value="{{ c.id }}">{{ c.nome }}</option>
-        {% endfor %}
-    </select>
-    <button class="btn btn-success" type="submit">Enviar Mensagem</button>
-</form>
-<hr>
-<ul class="list-group mt-3">
-    {% for m in mensagens %}
-    <li class="list-group-item">
-        <strong>{{ m.titulo }}</strong> para {{ m.contato.nome }}<br>
-        {{ m.texto }}<br>
-        <small>{{ m.data_envio }}</small>
-    </li>
-    {% endfor %}
-</ul>
-<a href="/contacts" class="btn btn-link mt-3">Voltar aos Contatos</a>
-<a href="/logout" class="btn btn-secondary">Logout</a>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-envelope-plus-fill"></i> Nova Mensagem</h5>
+        <form method="post" action="/messages/send">
+          <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" required>
+          </div>
+          <div class="mb-3">
+            <label for="texto" class="form-label">Texto</label>
+            <textarea class="form-control" id="texto" name="texto" rows="4" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="contato" class="form-label">Contato</label>
+            <select class="form-select" id="contato" name="contato" required>
+              <option value="" disabled selected>Escolha um contato</option>
+              {% for c in contatos %}
+              <option value="{{ c.id }}">{{ c.nome }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success w-100"><i class="bi bi-send-fill"></i> Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-chat-dots-fill"></i> Mensagens Enviadas</h5>
+        {% if mensagens %}
+        <ul class="list-group">
+          {% for m in mensagens %}
+          <li class="list-group-item">
+            <div class="fw-bold"><i class="bi bi-tag-fill"></i> {{ m.titulo }}</div>
+            <div class="text-muted small"><i class="bi bi-person-fill"></i> {{ m.contato.nome }} | <i class="bi bi-clock"></i> {{ m.data_envio.strftime('%d/%m/%Y %H:%M') }}</div>
+            <div class="mt-2">{{ m.texto }}</div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted">Nenhuma mensagem enviada ainda.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
+
